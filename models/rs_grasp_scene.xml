@@ -1,0 +1,157 @@
+<mujoco model="zekeeparm_grasp_scene">
+  <compiler angle="radian" meshdir="meshes/" />
+
+  <option timestep=".001" iterations="100" solver="Newton" integrator="implicitfast" />
+
+  <contact><exclude body1="base_link" body2="link1" /><exclude body1="base_link" body2="link2" /><exclude body1="link1" body2="link2" /><exclude body1="link2" body2="link3" /><exclude body1="link3" body2="link4" /><exclude body1="link4" body2="link5" /><exclude body1="link5" body2="link6" /><exclude body1="link1" body2="link5" /><exclude body1="gripper_base" body2="link6" /><exclude body1="gripper_left" body2="gripper_base" /><exclude body1="gripper_right" body2="gripper_base" /><exclude body1="gripper_left" body2="link6" /><exclude body1="gripper_right" body2="link6" /></contact><statistic center="0.25 0 0.18" extent="0.62" />
+
+  <visual>
+    <headlight diffuse="0.68 0.68 0.68" ambient="0.35 0.35 0.35" specular="0.1 0.1 0.1" />
+    <rgba haze="0.15 0.22 0.30 1" />
+    <global azimuth="125" elevation="-23" />
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.30 0.48 0.65" rgb2="0.04 0.06 0.08" width="512" height="3072" />
+    <texture type="2d" name="rs_ground_tex" builtin="checker" mark="edge" rgb1="0.22 0.28 0.31" rgb2="0.10 0.14 0.16" markrgb="0.72 0.78 0.80" width="300" height="300" />
+    <material name="rs_ground" texture="rs_ground_tex" texuniform="true" texrepeat="6 6" reflectance="0.12" />
+    <material name="rs_table" rgba="0.34 0.37 0.36 1" />
+    <material name="rs_red" rgba="0.92 0.08 0.06 1" />
+    <material name="rs_blue" rgba="0.03 0.42 0.94 1" />
+    <material name="rs_yellow" rgba="1.00 0.72 0.04 1" />
+    <material name="target_mat" rgba="1.00 0.55 0.12 0" />
+    <material name="rs_zone_red" rgba="0.92 0.08 0.06 0.86" />
+    <material name="rs_zone_blue" rgba="0.03 0.42 0.94 0.86" />
+    <material name="rs_zone_yellow" rgba="1.00 0.72 0.04 0.86" />
+  <mesh name="zk_base_link_0" content_type="model/stl" file="zk_base_link_0.STL" />
+    <mesh name="zk_link1_0" content_type="model/stl" file="zk_link1_0.STL" />
+    <mesh name="zk_link2_0" content_type="model/stl" file="zk_link2_0.STL" />
+    <mesh name="zk_link3_0" content_type="model/stl" file="zk_link3_0.STL" />
+    <mesh name="zk_link4_0" content_type="model/stl" file="zk_link4_0.STL" />
+    <mesh name="zk_link5_0" content_type="model/stl" file="zk_link5_0.STL" />
+    <mesh name="zk_link6_0" content_type="model/stl" file="zk_link6_0.STL" />
+    <mesh name="zk_gripper_base_0" content_type="model/stl" file="zk_gripper_base_0.STL" />
+    <mesh name="zk_left_link_0" content_type="model/stl" file="zk_left_link_0.STL" />
+    <mesh name="zk_right_link_0" content_type="model/stl" file="zk_right_link_0.STL" />
+  <material name="zk_light_grey" rgba="0.89804 0.91765 0.92941 1" /><material name="zk_dark_grey" rgba="0.64706 0.64706 0.64706 1" /></asset>
+
+  <worldbody>
+    <light pos="0.25 -0.15 1.3" dir="0.05 0.1 -1" directional="true" />
+    <camera name="overhead_rgb" mode="fixed" pos="0.34 0.0 0.68" xyaxes="1 0 0 0 1 0" fovy="70" />
+    <geom name="floor" type="plane" size="1 1 0.04" material="rs_ground" friction="1.2 0.01 0.001" pos="0.0 0.0 -0.06" />
+
+    
+    <body name="task_table" pos="0.38 0.0 -0.015">
+      <geom name="task_table_geom" type="box" size="0.25 0.45 0.015" material="rs_table" friction="1.8 0.02 0.002" solref="0.003 1" solimp="0.98 0.995 0.0005" />
+    </body>
+
+    <geom name="red_zone_n" type="box" pos="0.45 -0.13999999999999999 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_red" contype="0" conaffinity="0" />
+    <geom name="red_zone_s" type="box" pos="0.45 -0.22 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_red" contype="0" conaffinity="0" />
+    <geom name="red_zone_e" type="box" pos="0.49000000000000005 -0.18 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_red" contype="0" conaffinity="0" />
+    <geom name="red_zone_w" type="box" pos="0.41000000000000003 -0.18 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_red" contype="0" conaffinity="0" />
+
+    <geom name="blue_zone_n" type="box" pos="0.36 0.04 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_blue" contype="0" conaffinity="0" />
+    <geom name="blue_zone_s" type="box" pos="0.36 -0.04 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_blue" contype="0" conaffinity="0" />
+    <geom name="blue_zone_e" type="box" pos="0.4 0.0 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_blue" contype="0" conaffinity="0" />
+    <geom name="blue_zone_w" type="box" pos="0.32 0.0 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_blue" contype="0" conaffinity="0" />
+
+    <geom name="yellow_zone_n" type="box" pos="0.45 0.22 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_yellow" contype="0" conaffinity="0" />
+    <geom name="yellow_zone_s" type="box" pos="0.45 0.13999999999999999 0.0015000000000000013" size="0.040 0.003 0.001" material="rs_zone_yellow" contype="0" conaffinity="0" />
+    <geom name="yellow_zone_e" type="box" pos="0.49000000000000005 0.18 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_yellow" contype="0" conaffinity="0" />
+    <geom name="yellow_zone_w" type="box" pos="0.41000000000000003 0.18 0.0015000000000000013" size="0.003 0.040 0.001" material="rs_zone_yellow" contype="0" conaffinity="0" />
+
+    <body name="red_cube" pos="0.24 -0.25 0.022499999999999992">
+      <freejoint name="red_cube_freejoint" />
+      <geom name="red_cube_geom" type="box" size="0.0225 0.0225 0.0225" material="rs_red" mass="0.045" friction="3.5 0.08 0.01" solref="0.002 1" solimp="0.99 0.995 0.0005" />
+    </body>
+
+    
+    <body name="blue_block" pos="0.3 0.06 0.01899999999999999">
+      <freejoint name="blue_block_freejoint" />
+      <geom name="blue_block_geom" type="box" size="0.026 0.016 0.019" material="rs_blue" mass="0.050" friction="3.5 0.08 0.01" solref="0.002 1" solimp="0.99 0.995 0.0005" />
+    </body>
+
+    <body name="yellow_cylinder" pos="0.33 -0.1 0.025999999999999995">
+      <freejoint name="yellow_cylinder_freejoint" />
+      <geom name="yellow_cylinder_geom" type="cylinder" size="0.020 0.026" material="rs_yellow" mass="0.042" friction="3.5 0.08 0.01" solref="0.002 1" solimp="0.99 0.995 0.0005" />
+    </body>
+
+    <body name="ik_target" mocap="true" pos="0.34 0.0 0.1">
+      <geom name="ik_target_sphere" type="sphere" size="0.025" material="target_mat" contype="0" conaffinity="0" />
+      <site name="ik_target_site" pos="0 0 0" size="0.035" rgba="1 0.55 0.12 0" />
+    </body>
+  <body name="base_link">
+      <inertial pos="-0.007131 0.001945 0.043144" quat="0.410954 0.397793 0.2331 0.786474" mass="0.916" diaginertia="0.00364085 0.00300166 0.00166533" />
+      <geom name="base_link_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_base_link_0" material="zk_light_grey" />
+      <geom name="base_link_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_base_link_0" solref=".002 1" solimp=".99 .999 .0005" />
+      <body name="link1" pos="0 0 0.0725" quat="-3.67321e-06 0 0 1">
+        <inertial pos="-0.007212 0.000698341 0.0459556" quat="-0.00218724 0.866339 -0.0138317 0.49926" mass="0.735" diaginertia="0.000201087 0.000196979 0.000166321" />
+        <joint name="joint1" pos="0 0 0" axis="0 0 -1" range="-2.58 2.58" armature="0.01" damping="2" />
+        <geom name="link1_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link1_0" material="zk_light_grey" />
+        <geom name="link1_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link1_0" solref=".002 1" solimp=".99 .999 .0005" />
+        <body name="link2" pos="-0.016376 -0.031625 0.064309" quat="0.707105 0.707108 0 0">
+          <inertial pos="0.197269 -1.8e-05 -0.030544" quat="0.496073 0.503649 0.501647 0.498598" mass="0.768" diaginertia="0.00587777 0.00569552 0.000476106" />
+          <joint name="joint2" pos="0 0 0" axis="0 0 1" range="0 3.7" armature="0.01" damping="2" />
+          <geom name="link2_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link2_0" material="zk_light_grey" />
+          <geom name="link2_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link2_0" solref=".002 1" solimp=".99 .999 .0005" />
+          <body name="link3" pos="0.26 0 0" quat="1.34924e-11 -3.67321e-06 1 -3.67321e-06">
+            <inertial pos="0.146501 0.048525 0.030587" quat="0.549303 0.492107 0.500427 0.453508" mass="0.859" diaginertia="0.00885198 0.0086454 0.000853629" />
+            <joint name="joint3" pos="0 0 0" axis="0 0 1" range="-0.01 3.7" armature="0.01" damping="2" />
+            <geom name="link3_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link3_0" material="zk_light_grey" />
+            <geom name="link3_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link3_0" solref=".002 1" solimp=".99 .999 .0005" />
+            <body name="link4" pos="0.236 0.053693 0.00075">
+              <inertial pos="0.056244 0.051257 0.031059" quat="0.641001 0.633721 0.312275 0.299999" mass="0.506" diaginertia="0.00106431 0.000897818 0.000360542" />
+              <joint name="joint4" pos="0 0 0" axis="0 0 1" range="-1.57 1.57" armature="0.01" damping="2" />
+              <geom name="link4_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link4_0" material="zk_light_grey" />
+              <geom name="link4_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link4_0" solref=".002 1" solimp=".99 .999 .0005" />
+              <body name="link5" pos="0.0748682 0.0470001 0.0308749" quat="0 0 0.707107 0.707107">
+                <inertial pos="-0.00385604 -2.21e-10 -0.0470592" quat="0.27328 0.653618 0.649992 0.274977" mass="0.391" diaginertia="0.000285103 0.000280309 0.00017267" />
+                <joint name="joint5" pos="0 0 0" axis="0 0 1" range="-1.57 1.57" armature="0.01" damping="2" />
+                <geom name="link5_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link5_0" material="zk_light_grey" />
+                <geom name="link5_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link5_0" solref=".002 1" solimp=".99 .999 .0005" />
+                <body name="link6" pos="-0.03 0 -0.04675" quat="0.5 0.5 -0.5 -0.5">
+                  <inertial pos="7e-05 0.010969 0.046197" quat="0.546631 0.450953 -0.402918 0.579218" mass="0.643" diaginertia="0.000863528 0.000609576 0.000587067" />
+                  <joint name="joint6" pos="0 0 0" axis="0 0 -1" range="-1.57 1.57" armature="0.01" damping="2" />
+                  <geom name="link6_visual" pos="0 0 0" quat="0.707107 0 0 0.707107" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_link6_0" material="zk_dark_grey" />
+                  <geom name="link6_collision" pos="0 0 0" quat="0.707107 0 0 0.707107" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_link6_0" solref=".002 1" solimp=".99 .999 .0005" />
+                  <body name="gripper_base" pos="0 0 0.056">
+                    <inertial pos="1e-06 1e-06 0.00566" quat="0.332886 0.623848 -0.332886 0.623848" mass="0.021" diaginertia="5.094e-06 3.49309e-06 2.02491e-06" />
+                    <geom name="gripper_base_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_gripper_base_0" material="zk_light_grey" />
+                    <geom name="gripper_base_collision" type="mesh" conaffinity="3" group="3" rgba="0.7 0.7 0.7 0" mesh="zk_gripper_base_0" solref=".002 1" solimp=".99 .999 .0005" />
+                    <body name="gripper_left" pos="0 0 -0.056">
+                      <inertial pos="0.014997 -1e-06 0.088532" quat="0.988801 0 0.149241 0" mass="0.045195" diaginertia="1.40994e-05 1.2302e-05 6.17361e-06" />
+                      <joint name="gripper_joint" pos="0 0 0" axis="1 0 0" type="slide" range="0 0.035" armature="0.01" damping="1" />
+                      <geom name="left_link_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_left_link_0" material="zk_light_grey" />
+                      <geom name="left_link_contact" size="0.006 0.002793 0.008625" pos="0.00688195 0 0.142575" type="box" conaffinity="3" friction="1.2 0.01 0.001" rgba="0.25 0.25 0.25 1" group="3" solref=".002 1" solimp=".99 .999 .0005" />
+                    <geom name="left_link_collision" type="mesh" contype="1" conaffinity="3" group="3" rgba="0.75 0.8 0.85 1" mesh="zk_left_link_0" pos="0 0 0" quat="1.0 0.0 0.0 0.0" solref=".002 1" solimp=".99 .999 .0005" />
+                      </body>
+                    <body name="gripper_right" pos="0 0 -0.056">
+                      <inertial pos="-0.015369 -1e-06 0.088532" quat="0.988801 0 -0.149241 0" mass="0.045195" diaginertia="1.40994e-05 1.2302e-05 6.17361e-06" />
+                      <joint name="right_joint" pos="0 0 0" axis="-1 0 0" type="slide" range="0 0.035" armature="0.01" damping="1" />
+                      <geom name="right_link_visual" type="mesh" contype="0" conaffinity="0" group="1" mesh="zk_right_link_0" material="zk_light_grey" />
+                      <geom name="right_link_contact" size="0.006 0.002793 0.008625" pos="-0.00725383 0 0.142575" type="box" conaffinity="3" friction="1.2 0.01 0.001" rgba="0.25 0.25 0.25 1" group="3" solref=".002 1" solimp=".99 .999 .0005" />
+                    <geom name="right_link_collision" type="mesh" contype="1" conaffinity="3" group="3" rgba="0.75 0.8 0.85 1" mesh="zk_right_link_0" pos="0 0 0" quat="1.0 0.0 0.0 0.0" solref=".002 1" solimp=".99 .999 .0005" />
+                      </body>
+                  </body>
+                  <body name="gripper_end" pos="0 0 0.15539" quat="3.27579e-05 0.707108 -3.27581e-05 0.707105">
+                    <site name="tcp" pos="0 0 0" size="0.004" rgba="0 1 0 1" />
+                  </body>
+                <geom name="wrist_camera_housing" type="box" pos="0.0 0.066 0.05" quat="-0.13052619222005157 0.9914448613738104 0.0 0.0" size=".021 .021 .0115" rgba=".12 .13 .14 1" group="1" contype="0" conaffinity="0" /><camera name="wrist_rgb" pos="-0.009 0.0627647619362185 0.06207407282861335" quat="-0.13052619222005157 0.9914448613738104 0.0 0.0" fovy="68" /><geom name="wrist_camera_left_lens" type="cylinder" pos="-0.009 0.0627647619362185 0.06207407282861335" quat="-0.13052619222005157 0.9914448613738104 0.0 0.0" size=".004 .001" rgba=".025 .075 .10 1" group="1" contype="0" conaffinity="0" /><geom name="wrist_camera_right_lens" type="cylinder" pos="0.009 0.0627647619362185 0.06207407282861335" quat="-0.13052619222005157 0.9914448613738104 0.0 0.0" size=".004 .001" rgba=".025 .075 .10 1" group="1" contype="0" conaffinity="0" /><site name="pinch_center" pos="-0.0001859399999999999 1.3877787807814457e-17 0.14257499999999979" size=".002" rgba="0 0 0 0" /></body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="task_obstacle" pos=".30 -.30 .09" mocap="true"><geom name="task_obstacle_geom" type="box" size=".025 .045 .09" rgba=".75 .39 .16 0" contype="0" conaffinity="0" group="0" /></body></worldbody>
+<actuator>
+    <general name="joint1" joint="joint1" ctrlrange="-2.58 2.58" forcerange="-27 27" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="joint2" joint="joint2" ctrlrange="0 3.7" forcerange="-27 27" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="joint3" joint="joint3" ctrlrange="-0.01 3.7" forcerange="-27 27" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="joint4" joint="joint4" ctrlrange="-1.57 1.57" forcerange="-12.5 12.5" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="joint5" joint="joint5" ctrlrange="-1.57 1.57" forcerange="-12.5 12.5" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="joint6" joint="joint6" ctrlrange="-1.57 1.57" forcerange="-12.5 12.5" biastype="affine" gainprm="400" biasprm="0 -400 -30" />
+    <general name="gripper_joint" joint="gripper_joint" ctrlrange="0 0.035" forcerange="-10 10" biastype="affine" gainprm="800" biasprm="0 -800 -8" />
+    <general name="right_joint" joint="right_joint" ctrlrange="0 0.035" forcerange="-10 10" biastype="affine" gainprm="800" biasprm="0 -800 -8" />
+  </actuator>
+</mujoco>
