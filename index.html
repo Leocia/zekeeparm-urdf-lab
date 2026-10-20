@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zekeeparm · 机械臂工作台</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <script type="module" crossorigin src="./assets/index-sVxOmVry.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-J9JfL9rx.css">
+  <script type="module" crossorigin src="./assets/index-BFm7a1KF.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DtSoCY3i.css">
 </head>
 <body>
   <main class="app">
@@ -110,6 +110,27 @@
         </form>
         <p id="obstacle-status" class="control-hint" role="status" aria-live="polite" data-i18n="obstacle.off">障碍物未启用</p>
       </section>
+      <section class="control-card teaching-controls" aria-labelledby="study-title">
+        <div class="control-card-heading"><h2 id="study-title" data-i18n="study.title">教学实验舱</h2><span class="feature-badge">DEBUG</span></div>
+        <div class="study-toggles">
+          <label class="check-label"><input id="study-frames" type="checkbox"><span data-i18n="study.frames">显示 Link / 关节坐标系</span></label>
+          <label class="check-label"><input id="study-hulls" type="checkbox"><span data-i18n="study.hulls">显示碰撞凸包与指垫</span></label>
+          <label class="check-label"><input id="study-paths" type="checkbox" checked><span data-i18n="study.paths">显示规划轨迹与航点</span></label>
+          <label class="check-label"><input id="study-proximity" type="checkbox" checked><span data-i18n="study.proximity">显示最近距离警戒线</span></label>
+        </div>
+        <p class="control-hint" id="study-geometry" data-i18n="study.geometry">坐标轴：X 红 / Y 绿 / Z 蓝；碰撞包络显示编译后的凸包和指垫，外观半透明。</p>
+        <p class="study-distance" id="study-distance" role="status" data-i18n="study.disabled">启用障碍物后显示实际最近表面距离。</p>
+        <p class="control-hint" data-i18n="study.legend">红虚线：被拒直线；红标记：碰撞/间距冲突位置；绿线：通过检测的 TCP 轨迹；绿点：安全过渡航点。</p>
+        <p id="study-plan-status" class="control-hint" role="status" data-i18n="study.idle">点击「红色搬运场景」启动规划，观察采样、碰撞检测和候选绕行。</p>
+        <details class="study-log-panel" open><summary data-i18n="study.log">算法调试日志（最近 160 条）</summary>
+          <ol id="study-log" class="study-log" role="log" aria-label="算法调试日志" aria-live="off"></ol>
+          <button type="button" id="study-clear" data-i18n="study.clear">清空日志与轨迹</button>
+        </details>
+        <details class="study-guide"><summary data-i18n="study.experiments">实训指南</summary>
+          <p class="control-hint" data-i18n="study.experiment1">实验一：缩小 joint2 的 lower / upper，观察行号诊断；限位需包含 ready_pose。修正后同步，再拖动关节观察可达范围。TF 与碰撞包络可辅助分析。</p>
+          <p class="control-hint" data-i18n="study.experiment2">实验二：点击红色搬运场景，比较被拒直线与绕行。停止任务后调整箱体位置或尺寸，重试并观察失败原因。重叠放置会被拒绝；有限候选搜索无解时停止任务。</p>
+        </details>
+      </section>
       <section class="control-card model-controls" aria-labelledby="model-title">
         <div class="control-card-heading"><h2 id="model-title" data-i18n="model.title">URDF 同步</h2><span class="feature-badge">URDF</span></div>
         <p id="model-hint" class="control-hint" data-i18n="model.hint">使用项目内置模型，编辑保存为 simulation.urdf。同步会复位场景。</p>
@@ -117,7 +138,9 @@
           <details><summary data-i18n="model.expand">编辑 URDF</summary>
             <p class="control-hint" data-i18n="model.support">支持当前六轴的原点、轴、限位、质量、惯量与颜色；保留拓扑和指垫近似。</p>
             <label for="urdf-text" class="control-hint" data-i18n="model.label">当前六轴机械臂 URDF</label>
-            <textarea id="urdf-text" spellcheck="false" disabled></textarea>
+            <textarea id="urdf-text" spellcheck="false" disabled aria-describedby="urdf-diagnostic-summary" aria-invalid="false"></textarea>
+            <p id="urdf-diagnostic-summary" class="control-hint" role="status"></p>
+            <ul id="urdf-diagnostics" class="urdf-diagnostics" aria-label="URDF 诊断"></ul>
             <div class="button-row"><button type="submit" data-i18n="model.save">保存并同步</button><button id="urdf-read" type="button" data-i18n="model.read">重新读取</button><button id="urdf-restore" type="button" data-i18n="model.restore">恢复内置模型</button></div>
           </details>
         </form>
